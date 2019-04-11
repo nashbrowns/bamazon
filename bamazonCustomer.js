@@ -18,14 +18,15 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
+    console.log('\nWelcome to Bamazon!\n');
     askCustomer();
   });
 
-  let dispProduct = function(){
+  let dispProduct = function(callback){
     var query = connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
 
-        // console.log(res);
+        console.log('\n');
         let itemArr = [];
         res.forEach(function(element) {
             console.log('---------------------------------------------------------------------------------------');
@@ -35,6 +36,8 @@ var connection = mysql.createConnection({
                         ', stock: '+element.stock+
                         ', department: '+element.department_name);
           });
+          console.log('\n');
+          callback();
     })
 }
 
@@ -51,81 +54,20 @@ let askCustomer = function(){
             case "Purchase Products":
             console.log("purchase products");
             askCustomer();
+            break;
 
             case "Display Products":
             console.log("display products");
-            dispProduct();
-            askCustomer();
+            dispProduct(askCustomer);
+            break;
 
             case "Quit":
-            console.log('quit');
+            console.log('\nCome again!\n');
             connection.end();
+            break;
         }
     })
 }
-  
-//   function postProduct() {
 
-//     inquirer.prompt([
-//         {
-//             type: 'input',
-//             message: 'Item Name:',
-//             name: 'itemName'
-//         },
-//         {
-//             type: 'input',
-//             message: 'Category:',
-//             name: 'itemCat'
-//         },
-//         {
-//             type: 'input',
-//             message: 'Starting Price:',
-//             name: 'itemPrice'
-//         }
-
-//     ]).then(function(res){
-//         console.log("\nAdding New Product...\n");
-//         var query = connection.query(
-//           "INSERT INTO auctions SET ?",
-//           {
-//             item_name: res.itemName,
-//             category: res.itemCat,
-//             starting_bid: res.itemPrice,
-//             highest_bid: res.itemPrice
-//           },
-//           function(err, res) {
-//             if (err) throw err
-//             if (err) connection.end();
-
-//             console.log(res.affectedRows + "Product added!\n");
-//             // Call updateProduct AFTER the INSERT completes
-//             startBay();
-//           }
-//         );
-//     })
-//   }
-
-// let startBay = function(){
-//     inquirer.prompt([
-//         {
-//             type: "list",
-//             message: "What do you want to do?",
-//             choices: ["POST", "BID", "EXIT"],
-//             name: 'selection'
-//         }
-//     ]).then(function(res) {
-//         console.log(res.selection);
-
-//         if(res.selection === 'POST'){
-//              postProduct();   
-//         }
-//         else if(res.selection === 'BID'){
-//             bidProduct();
-//         }
-//         else if(res.selection == 'EXIT'){
-//             connection.end();
-//         }
-//     })
-// }
 
 
