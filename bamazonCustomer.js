@@ -29,12 +29,14 @@ let dispProduct = function (callback) {
         console.log('\n');
         let itemArr = [];
         res.forEach(function (element) {
-            console.log('---------------------------------------------------------------------------------------');
             console.log('id: ' + element.id +
                 ', product: ' + element.product_name +
                 ', price: $' + element.price +
                 ', stock: ' + element.stock +
-                ', department: ' + element.department_name);
+                ', department: ' + element.department_name +
+                ', stock: ' + element.stock_quantity);
+            console.log('--------------------------------------------------------------------------------------------------');
+
         });
         console.log('\n');
         callback();
@@ -75,6 +77,9 @@ let purchaseProduct = function (callback) {
                 }
                 else{
                     let newQuantity = res[ID].stock_quantity - quantity;
+                    let purchaseCost = res[ID].price*quantity;
+                    let product = res[ID].product_name;
+
 
                     connection.query('UPDATE products SET ? WHERE ?',
                     [
@@ -85,6 +90,9 @@ let purchaseProduct = function (callback) {
                             id: res[ID].id
                         }
                     ]);
+
+                    console.log('\nPurchased '+quantity+' '+product);
+                    console.log('Cost = $'+purchaseCost+'\n');
                 }
             }
             
